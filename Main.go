@@ -15,52 +15,31 @@ const (
 	CONN_TYPE = "tcp"
 )
 
-
-
 var (
-	NWorkers = flag.Int("n", 4, "The number of workers to start")
-	HTTPAddr = flag.String("http", "127.0.0.1:8000", "Address to listen for HTTP requests on")
+	nWorkers = flag.Int("n", 10, "Number of workers to start with")
+	workPath = flag.String("r", "/", "Root directory")
+	nCPU = flag.Int("c", 1, "Number of CPU cores")
 )
 
 
 func main() {
-//	wordPtr := flag.String("r", "/", "Root directory")
-//	numbPtr := flag.Int("c", 1, "Number of CPU cores")
-//	flag.Parse()
-//	fmt.Println("word:", *wordPtr)
-//	fmt.Println("numb:", *numbPtr)
-
-	// Parse the command-line flags.
 	flag.Parse()
-
-	// Start the dispatcher.
-	fmt.Println("Starting the dispatcher")
-	StartDispatcher(*NWorkers)
-
-
-	// Listen for incoming connections.
+	StartDispatcher(*nWorkers)
 	l, err := net.Listen(CONN_TYPE, ":"+CONN_PORT)
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
 		os.Exit(1)
 	}
-	// Close the listener when the application closes.
 	defer l.Close()
 	fmt.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
 	for {
-		// Listen for an incoming connection.
-		conn, err := l.Accept()
-		if err != nil {
-			fmt.Println("Error accepting: ", err.Error())
+		connextion, error := l.Accept()
+		if error != nil {
+			fmt.Println("Error accepting: ", error.Error())
 			os.Exit(1)
 		}
-
-		//logs an incoming message
-		fmt.Printf("Received message %s -> %s \n", conn.RemoteAddr(), conn.LocalAddr())
-
-		// Handle connections in a new goroutine.
-//		go handleRequest(conn)
-		Collector(conn)
+		fmt.Printf("Received message %s -> %s \n", connextion.RemoteAddr(), connextion.LocalAddr())
+		Collector(connextion, workPath)
 	}
 }
 

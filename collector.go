@@ -4,57 +4,51 @@ package main
 import (
 	"fmt"
 	"net"
-	"bufio"
-	"errors"
+//	"errors"
 	"strings"
-	"net/textproto"
+	"net/url"
 )
 
 // A buffered channel that we can send work requests on.
 var WorkQueue = make(chan WorkRequest, 100)
 
+func Collector(connection net.Conn, workDir *string) {
+	var buf = make([]byte, 1024)
+	_, err := connection.Read(buf)
+	var requestStr = string(buf)
+	if err != nil {
+		fmt.Println("Request can not be retrieved")
+		return
+	}
 
-
-func Collector(conn net.Conn) {
-	// Now, we take the delay, and the person's name, and make a WorkRequest out of them.
-	work, err := parseRequest(bufio.NewReader(conn), conn)
-
+	work, err := parseRequest(requestStr)
 	if err != nil {
 		fmt.Println("Request not parsed")
 		return
 	}
+	work.Connection = connection
 
 	// Push the work onto the queue.
 	WorkQueue <- *work
 	fmt.Println("Work request queued")
-
-	// And let the user know their work request was created.
 	return
 }
 
 
-func parseRequest(reader *bufio.Reader, conn net.Conn) (*WorkRequest, error) {
-
-	var r = textproto.NewReader(reader)
-
-	// create new request object
+func parseRequest(query string) (*WorkRequest, error) {
+	parts := strings.Split(query, " ")
 	request := new(WorkRequest)
 
-	methodLine, _ := r.ReadLine()
-	methodLineElements := strings.Split(methodLine, " ")
+	uri := strings.Split(parts[1], "?")
 
-	if (len(methodLineElements) != 3) {
-		return request, errors.New("Invalid request")
-	}
+	path, _ := url.QueryUnescape(uri[0])
 
-	request.Method = methodLineElements[0]
-
-	if methodLineElements[1] == "/" {
+	request.Method = parts[0]
+	if parts[1] == "/" {
 		request.Path = "index.html"
 	} else {
-		request.Path = methodLineElements[1]
+		request.Path = path
 	}
-	request.HTTPVersion = methodLineElements[2]
-	request.Connection = conn
+	request.HTTPVersion = parts[2]
 	return request, nil
 }
