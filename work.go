@@ -1,8 +1,16 @@
 package main
 
-import "time"
+import "net"
 
 type WorkRequest struct {
-	Name  string
-	Delay time.Duration
+	// request method (i.e GET, POST ...)
+	Method string
+
+	// path to the resource
+	Path string
+
+	// Protocl version
+	HTTPVersion string
+
+	Connection net.Conn
 }

@@ -3,7 +3,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 // NewWorker creates, and returns a new Worker object. Its only argument
@@ -38,10 +37,14 @@ func (w Worker) Start() {
 			select {
 			case work := <-w.Work:
 			// Receive a work request.
-				fmt.Printf("worker%d: Received work request, delaying for %f seconds\n", w.ID, work.Delay.Seconds())
-
-				time.Sleep(work.Delay)
-				fmt.Printf("worker%d: Hello, %s!\n", w.ID, work.Name)
+				fmt.Printf("worker %d: Received work request\n", w.ID)
+				fmt.Printf(work.Method, work.Path)
+			// TODO: Actual work TBD
+				message := "Hi, I received your message! It was "
+				work.Connection.Write([]byte(message));
+				work.Connection.Close()
+			// TODO: Actual work TBD
+				fmt.Printf("worker%d: Hello, %s!\n", w.ID, work.Path)
 
 			case <-w.QuitChan:
 			// We have been asked to stop.
