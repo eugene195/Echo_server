@@ -33,9 +33,9 @@ func main() {
 	defer l.Close()
 	fmt.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
 	for {
-		connextion, error := l.Accept()
-		if error != nil {
-			fmt.Println("Error accepting: ", error.Error())
+		connextion, err := l.Accept()
+		if err != nil {
+			fmt.Println("Error accepting: ", err.Error())
 			os.Exit(1)
 		}
 		fmt.Printf("Received message %s -> %s \n", connextion.RemoteAddr(), connextion.LocalAddr())
