@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"strconv"
-	"bytes"
 	"flag"
 )
 
@@ -16,7 +14,7 @@ const (
 )
 
 var (
-	nWorkers = flag.Int("n", z, "Number of workers to start with")
+	nWorkers = flag.Int("n", 15, "Number of workers to start with")
 	workPath = flag.String("r", "/", "Root directory")
 	nCPU = flag.Int("c", 1, "Number of CPU cores")
 )
