@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	port        int    `json:"port"`
-	rootDir        string `json:"rootDir"`
-	indexFile string `json:"indexFile"`
-	isInitialised bool
+	port        		int    `json:"port"`
+	rootDir        		string `json:"rootDir"`
+	indexFile 			string `json:"indexFile"`
+	isInitialised 		bool
 }
 
 var config Config

@@ -23,22 +23,22 @@ func urlSecurityCheck (checkedUrl string) (string, string) {
 
 func fileNotFoundCheck (path string) (string, string, string) {
 	var errorString = NOT_FOUND
-	file, err := ioutil.ReadFile(rootDir + path)
+	file, err := ioutil.ReadFile(config.rootDir + path)
 	if err == nil {
-		return string(file[:]), "", rootDir + path
+		return string(file[:]), "", config.rootDir + path
 	}
-	file, _ = ioutil.ReadFile(rootDir + "/httptest/" + notFoundFile)
-	return string(file[:]), errorString, rootDir + "/httptest/" + notFoundFile
+	file, _ = ioutil.ReadFile(config.rootDir + "/httptest/" + notFoundFile)
+	return string(file[:]), errorString, config.rootDir + "/httptest/" + notFoundFile
 }
 
 func indexFileCheck (path string) (string, string, string) {
 	var errorString = FORBIDDEN
 	if (IsDirectory(path)) {
-		file, err := ioutil.ReadFile(rootDir + path + indexFile)
+		file, err := ioutil.ReadFile(config.rootDir + path + indexFile)
 		if err != nil {
 			return "", errorString, ""
 		}
-		return string(file[:]), "", rootDir + path + indexFile
+		return string(file[:]), "", config.rootDir + path + indexFile
 	}
 	return "", "", ""
 }

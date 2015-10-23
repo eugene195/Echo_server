@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"flag"
+	"runtime"
 )
 
 const (
@@ -15,13 +16,15 @@ const (
 
 var (
 	nWorkers = flag.Int("n", 15, "Number of workers to start with")
-	workPath = flag.String("r", "/", "Root directory")
-	nCPU = flag.Int("c", 1, "Number of CPU cores")
+	workPath = flag.String("r", rootDir, "Root directory")
+	nCPU = flag.Int("c", 4, "Number of CPU cores")
 )
 
 
 func main() {
 	flag.Parse()
+	runtime.GOMAXPROCS(*nCPU)
+	config.rootDir = *workPath
 	StartDispatcher(*nWorkers)
 	l, err := net.Listen(CONN_TYPE, ":"+CONN_PORT)
 	if err != nil {
