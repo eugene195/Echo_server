@@ -11,7 +11,3 @@ const (
 	FILE_404     string = "/404.html"
 	HTTP_VERSION string = "1.1"
 )
-
-func GetStatusLine(status string) string {
-	return "HTTP/" + HTTP_VERSION + " " + status + "\r\n"
-}

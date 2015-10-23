@@ -25,15 +25,6 @@ func GetHeaderByExt(ext string) string {
 	}
 }
 
-func getHeader (extension string) string {
-	content_type, ok := exts[extension]
-	if (ok) {
-		return content_type
-	} else {
-		return exts["empty"]
-	}
-}
-
 func GetExtByFileName(name string) string {
 	parts := strings.Split(name, ".")
 	return parts[len(parts)-1]

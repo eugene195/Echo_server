@@ -1,5 +1,4 @@
 package main
-import "fmt"
 
 var (
 	httpMethods = []string{
@@ -25,6 +24,5 @@ func isSupportedMethod(method string) bool {
 			return true
 		}
 	}
-	fmt.Println(method)
 	return false
 }

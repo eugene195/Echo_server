@@ -53,6 +53,13 @@ func (worker Worker) Start() {
 						return
 					}
 
+					_, result = urlSecurityCheck(work.Path)
+					if (result != "") {
+						response.Status = result
+						writeAndClose(response, work.Connection)
+						return
+					}
+
 					file, result, filename = indexFileCheck(work.Path)
 					if (result != "") {
 						response.Status = result

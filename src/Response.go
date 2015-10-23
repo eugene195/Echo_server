@@ -49,7 +49,6 @@ func (headers Headers) ToPlainData() string {
 		}
 	}
 	strResult := result.String()
-	fmt.Println(strResult)
 	return strResult
 }
 

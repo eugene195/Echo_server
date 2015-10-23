@@ -45,9 +45,7 @@ func splitRequest(query string) (*WorkRequest, error) {
 	}
 
 	uri := strings.Split(parts[1], "?")
-//	fmt.Println(parts[1])
 	request.Path, _ = url.QueryUnescape(uri[0])
-
 	request.HTTPVersion = parts[2]
 	return request, nil
 }
