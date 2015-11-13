@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"net"
-	"os"
 	"flag"
 	"runtime"
+	"errors"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	nWorkers = flag.Int("n", 15, "Number of workers to start with")
+	nWorkers = flag.Int("n", 20, "Number of workers to start with")
 	workPath = flag.String("r", rootDir, "Root directory")
 	nCPU = flag.Int("c", 4, "Number of CPU cores")
 	port = flag.String("p", CONN_PORT, "Default port")
@@ -29,21 +29,20 @@ func main() {
 	config.port = *port
 	config.indexFile = indexFile
 
-	StartDispatcher(*nWorkers)
 	l, err := net.Listen(CONN_TYPE, ":" + config.port)
 	if err != nil {
-		fmt.Println("Error listening:", err.Error())
-		os.Exit(1)
+		checkError(errors.New("Error listening"))
 	}
 	defer l.Close()
 	fmt.Println("Listening on " + CONN_HOST + ":" + config.port)
+
+	pool := NewPool(*nWorkers)
+
 	for {
-		connextion, err := l.Accept()
+		connection, err := l.Accept()
 		if err != nil {
-			fmt.Println("Error accepting: ", err.Error())
-			os.Exit(1)
+			checkError(errors.New("Error accepting"))
 		}
-//		fmt.Printf("Received message %s -> %s \n", connextion.RemoteAddr(), connextion.LocalAddr())
-		Collector(connextion, workPath)
+		pool.Exec(connection)
 	}
 }

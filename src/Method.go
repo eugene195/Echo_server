@@ -1,5 +1,6 @@
 package main
 
+
 var (
 	httpMethods = []string{
 		"OPTIONS", "GET", "HEAD", "POST",

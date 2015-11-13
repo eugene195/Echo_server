@@ -1,8 +1,7 @@
 package main
-
 import "net"
 
-type WorkRequest struct {
+type UnitOfWork struct {
 	// request method (i.e GET, POST ...)
 	Method string
 
